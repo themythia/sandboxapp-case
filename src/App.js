@@ -5,6 +5,7 @@ import About from './components/pages/About';
 import Contact from './components/pages/contact/Contact';
 import Home from './components/pages/home/Home';
 import ProductPage from './components/pages/product/ProductPage';
+import Services from './components/pages/services/Services';
 import ProductContextProvider from './contexts/ProductContext';
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
           <Route path='/product/:productId' element={<ProductPage />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
+          <Route path='/services' element={<Services />} />
         </Routes>
       </ProductContextProvider>
       <Footer />
