@@ -8,7 +8,6 @@ import Form from './Form';
 const Services = () => {
   const [mode, setMode] = useState(null);
   const { products } = useContext(ProductContext);
-  console.log('products', products);
 
   return (
     <Container>

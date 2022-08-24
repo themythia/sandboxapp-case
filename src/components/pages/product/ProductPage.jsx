@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Container from '../../shared/Container';
 import Image from './Image';
 import ImageList from './ImageList';
 import InfoList from './InfoList';
 import Header from './Header';
+import { ProductContext } from '../../../contexts/ProductContext';
 const ProductPage = () => {
   const { productId } = useParams();
+  const { products } = useContext(ProductContext);
   const [product, setProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
 
   useEffect(() => {
-    if (!product && productId) {
+    if (!products) {
       fetch(`https://dummyjson.com/products/${productId}`)
         .then((res) => res.json())
         .then((data) => {
@@ -19,8 +21,13 @@ const ProductPage = () => {
           setThumbnail(data.thumbnail);
         })
         .catch((e) => console.warn(e));
+    } else {
+      setProduct(products.find((product) => productId == product.id));
+      setThumbnail(
+        products.find((product) => productId == product.id).thumbnail
+      );
     }
-  }, [product, productId]);
+  }, [product, productId, products]);
 
   if (!product) return null;
   return (

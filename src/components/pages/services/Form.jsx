@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { ProductContext } from '../../../contexts/ProductContext';
 import Button from '../../shared/Button';
 import Input from '../contact/Input';
+import { v4 as uuidv4 } from 'uuid';
 
 const Form = ({ type, setMode }) => {
   const [formData, setFormData] = useState(null);
@@ -10,7 +11,6 @@ const Form = ({ type, setMode }) => {
 
   const handleSubmit = (e, type) => {
     e.preventDefault();
-    console.log('submitted');
     if (type === 'add') {
       setFormData({
         title: e.target[0].value,
@@ -38,7 +38,6 @@ const Form = ({ type, setMode }) => {
       });
     } else if (type === 'delete') setFormData(true);
   };
-  console.log('formData', formData);
 
   useEffect(() => {
     if (formData) {
@@ -49,22 +48,50 @@ const Form = ({ type, setMode }) => {
           body: JSON.stringify(formData),
         })
           .then((res) => res.json())
+          // api always returns an object with id 101
+          // changing id with a unique id to prevent duplicates
+          // api doesnt return discountPercentage, using input data instead
           .then((data) => {
-            setProducts([...products, data]);
+            setProducts([
+              ...products,
+              {
+                ...data,
+                id: uuidv4(),
+                discountPercentage: formData.discountPercentage,
+              },
+            ]);
           })
           .catch((e) => console.warn(e));
       } else if (type === 'edit') {
-        fetch(`https://dummyjson.com/products/${option}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        })
+        // to edit newly created products with unique ids
+        // dummy fetch product with id 100
+        fetch(
+          `https://dummyjson.com/products/${
+            typeof option === 'number' ? option : 100
+          }`,
+          {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+          }
+        )
           .then((res) => res.json())
-          .then((data) =>
+          .then((data) => {
             setProducts(
-              products.map((product) => (product.id == option ? data : product))
-            )
-          )
+              products.map((product) => {
+                if (product.id === option) {
+                  if (typeof option === 'number')
+                    return {
+                      ...data,
+                      id: Number(data.id),
+                      discountPercentage: formData.discountPercentage,
+                    };
+                  else if (typeof option === 'string')
+                    return { ...product, ...formData };
+                } else return product;
+              })
+            );
+          })
           .catch((e) => console.warn(e));
       } else if (type === 'delete') {
         fetch('https://dummyjson.com/products/1', {
@@ -72,7 +99,7 @@ const Form = ({ type, setMode }) => {
         })
           .then((res) => res.json())
           .then((data) =>
-            setProducts(products.filter((product) => product.id != option))
+            setProducts(products.filter((product) => product.id !== option))
           );
       }
       setFormData(null);
@@ -84,7 +111,8 @@ const Form = ({ type, setMode }) => {
     <form onSubmit={(e) => handleSubmit(e, type)}>
       {(type === 'edit' || type === 'delete') && (
         <select
-          onChange={(e) => setOption(e.target.value)}
+          // newly added products with ids generated with uuid will return NaN, so use a string instead
+          onChange={(e) => setOption(Number(e.target.value) || e.target.value)}
           className='border border-black/80 p-2 rounded w-full mb-2'
         >
           {products &&
