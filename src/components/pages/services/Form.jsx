@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { ProductContext } from '../../../contexts/ProductContext';
+import Button from '../../shared/Button';
 import Input from '../contact/Input';
 
 const Form = ({ type, setMode }) => {
@@ -105,7 +106,7 @@ const Form = ({ type, setMode }) => {
           <Input type='number' placeholder='Stock' required />
         </>
       )}
-      <button type='submit'>Submit!</button>
+      <Button type='submit' styles='w-32' text='Submit' />
     </form>
   );
 };

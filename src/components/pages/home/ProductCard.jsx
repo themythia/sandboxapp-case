@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import Button from '../../shared/Button';
 
 const ProductCard = ({ data, type }) => {
   const navigate = useNavigate();
@@ -24,12 +25,7 @@ const ProductCard = ({ data, type }) => {
           <h1 className='font-medium text-xl line-clamp-1'>{data.title}</h1>
           <p className='line-clamp-2'>{data.description}</p>
         </div>
-        <button
-          onClick={handleClick}
-          className='bg-sky-600 text-white rounded w-32 mt-4 py-2 px-4'
-        >
-          More Info
-        </button>
+        <Button onClick={handleClick} styles='w-32' text='More Info' />
       </div>
     </div>
   );

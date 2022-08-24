@@ -1,3 +1,4 @@
+import Button from '../../shared/Button';
 import Input from './Input';
 
 const Form = () => {
@@ -10,9 +11,7 @@ const Form = () => {
         </div>
         <Input type='text' placeholder={'Title'} />
         <Input type='textarea' placeholder={'Description'} />
-        <button className='w-full mt-4 py-2 px-4 border rounded bg-sky-600 text-white'>
-          Submit!
-        </button>
+        <Button styles='w-full' text='Submit!' />
       </form>
     </div>
   );

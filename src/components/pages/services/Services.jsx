@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
 import { ProductContext } from '../../../contexts/ProductContext';
+import Button from '../../shared/Button';
 import Container from '../../shared/Container';
 import Form from './Form';
 
 const Services = () => {
   const [mode, setMode] = useState(null);
-  const { products, setProducts } = useContext(ProductContext);
+  const { products } = useContext(ProductContext);
   console.log('products', products);
 
   return (
@@ -13,24 +14,17 @@ const Services = () => {
       <h1 className='font-bold text-2xl mb-2'>Services</h1>
       {!mode && (
         <>
-          <button
-            onClick={() => setMode('add')}
-            className='w-full mt-4 py-2 px-4 border rounded bg-sky-600 text-white'
-          >
-            Add!
-          </button>
-          <button
+          <Button styles='w-full' text='Add!' onClick={() => setMode('add')} />
+          <Button
+            styles='w-full'
+            text='Edit!'
             onClick={() => setMode('edit')}
-            className='w-full mt-4 py-2 px-4 border rounded bg-sky-600 text-white'
-          >
-            Edit!
-          </button>
-          <button
+          />
+          <Button
+            styles='w-full'
+            text='Delete!'
             onClick={() => setMode('delete')}
-            className='w-full mt-4 py-2 px-4 border rounded bg-sky-600 text-white'
-          >
-            Delete!
-          </button>
+          />
         </>
       )}
 
