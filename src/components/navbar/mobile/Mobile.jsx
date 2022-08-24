@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IoMdClose, IoMdMenu } from 'react-icons/io';
-import useWindowSize from '../../hooks/useWindowSize';
+import useWindowSize from '../../../hooks/useWindowSize';
 import MobileMenu from './MobileMenu';
 
 const Mobile = () => {
