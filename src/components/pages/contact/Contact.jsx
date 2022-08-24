@@ -1,10 +1,11 @@
 import Container from '../../shared/Container';
+import Title from '../../shared/Title';
 import Form from './Form';
 
 const Contact = () => {
   return (
     <Container>
-      <h1 className='font-bold text-2xl mb-2'>Contact Us</h1>
+      <Title text='Contact Us' />
       <Form />
     </Container>
   );

@@ -1,9 +1,10 @@
 import Container from '../shared/Container';
+import Title from '../shared/Title';
 
 const About = () => {
   return (
     <Container>
-      <h1 className='font-bold text-2xl mb-2'>About Us</h1>
+      <Title text='About Us' />
       <p>
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti quasi
         debitis, ratione repellendus fugiat quisquam ipsam? Vitae dolorem quo

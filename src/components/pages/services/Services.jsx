@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { ProductContext } from '../../../contexts/ProductContext';
 import Button from '../../shared/Button';
 import Container from '../../shared/Container';
+import Title from '../../shared/Title';
 import Form from './Form';
 
 const Services = () => {
@@ -11,18 +12,22 @@ const Services = () => {
 
   return (
     <Container>
-      <h1 className='font-bold text-2xl mb-2'>Services</h1>
+      <Title text='Services' />
       {!mode && (
         <>
-          <Button styles='w-full' text='Add!' onClick={() => setMode('add')} />
           <Button
             styles='w-full'
-            text='Edit!'
+            text='Add Product'
+            onClick={() => setMode('add')}
+          />
+          <Button
+            styles='w-full'
+            text='Edit Product'
             onClick={() => setMode('edit')}
           />
           <Button
             styles='w-full'
-            text='Delete!'
+            text='Delete Product'
             onClick={() => setMode('delete')}
           />
         </>

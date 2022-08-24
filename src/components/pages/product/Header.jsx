@@ -1,7 +1,9 @@
-const Title = ({ title, category }) => {
+import Title from '../../shared/Title';
+
+const Header = ({ title, category }) => {
   return (
     <div className='flex flex-col'>
-      <h1 className='font-bold text-2xl mb-2'>{title}</h1>
+      <Title text={title} />
       <p className='text-slate-500 mb-2'>
         Posted on August 24, 2022 by Emir Al
       </p>
@@ -11,4 +13,4 @@ const Title = ({ title, category }) => {
     </div>
   );
 };
-export default Title;
+export default Header;
