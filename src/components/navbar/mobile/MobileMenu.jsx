@@ -1,4 +1,3 @@
-import { NavLink } from 'react-router-dom';
 import NavItem from '../NavItem';
 import TransitionWrapper from './TransitionWrapper';
 
