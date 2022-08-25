@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Container from '../../shared/Container';
 import Image from './Image';
 import ImageList from './ImageList';
@@ -7,11 +7,13 @@ import InfoList from './InfoList';
 import Header from './Header';
 import { ProductContext } from '../../../contexts/ProductContext';
 import api from '../../../utils/api';
+
 const ProductPage = () => {
   const { productId } = useParams();
   const { products } = useContext(ProductContext);
   const [product, setProduct] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!products) {
@@ -20,19 +22,25 @@ const ProductPage = () => {
           setProduct(data);
           setThumbnail(data.thumbnail);
         })
-        .catch((e) => console.warn(e));
+        .catch((e) => {
+          navigate('/');
+          console.warn(e);
+        });
     } else {
       // productId is a string
       // product.id can be a integer if fetched from API
       // product.id can also be a string if newly created due to uuid
       // eslint-disable-next-line eqeqeq
-      setProduct(products.find((product) => productId == product.id));
-      setThumbnail(
-        // eslint-disable-next-line eqeqeq
-        products.find((product) => productId == product.id).thumbnail
-      );
+      const findProduct = products.find((product) => productId == product.id);
+      if (findProduct) {
+        setProduct(findProduct);
+        setThumbnail(
+          // eslint-disable-next-line eqeqeq
+          findProduct.thumbnail
+        );
+      } else navigate('/');
     }
-  }, [product, productId, products]);
+  }, [navigate, product, productId, products]);
 
   if (!product) return null;
   return (
