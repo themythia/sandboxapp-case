@@ -17,10 +17,16 @@ const ProductCard = ({ data, type }) => {
         src={data.thumbnail}
         alt={data.title}
         className={`${
-          type === 'large' ? 'w-full mb-2 sm:w-1/2' : 'w-1/3 sm:w-full'
-        } object-cover aspect-video`}
+          type === 'large'
+            ? 'w-full mb-2 sm:mb-0 sm:w-3/5 rounded-t sm:rounded-t-none sm:rounded-l'
+            : 'w-1/3 sm:w-full rounded-l sm:rounded-l-none sm:rounded-t'
+        } object-cover aspect-[9/4] max-h-[400px] max-w-[900px]`}
       />
-      <div className='flex flex-col p-2 w-full h-full justify-between'>
+      <div
+        className={`flex flex-col p-2 w-full h-full justify-between ${
+          type === 'large' ? 'sm:w-2/5' : 'sm:w-full'
+        }`}
+      >
         <div>
           <h1 className='font-medium text-xl line-clamp-1'>{data.title}</h1>
           <p className='line-clamp-2'>{data.description}</p>

@@ -108,7 +108,10 @@ const Form = ({ type, setMode }) => {
   }, [formData, option, products, setMode, setProducts, type]);
 
   return (
-    <form onSubmit={(e) => handleSubmit(e, type)}>
+    <form
+      onSubmit={(e) => handleSubmit(e, type)}
+      className='w-full lg:w-1/2 m-auto'
+    >
       {(type === 'edit' || type === 'delete') && (
         <select
           // newly added products with ids generated with uuid will return NaN, so use a string instead

@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react';
-import { ProductContext } from '../../../contexts/ProductContext';
+import { useState } from 'react';
 import Button from '../../shared/Button';
 import Container from '../../shared/Container';
 import Title from '../../shared/Title';
@@ -7,29 +6,40 @@ import Form from './Form';
 
 const Services = () => {
   const [mode, setMode] = useState(null);
-  const { products } = useContext(ProductContext);
 
   return (
     <Container>
-      <Title text='Services' />
+      <Title
+        text={
+          !mode
+            ? 'Services'
+            : mode === 'edit'
+            ? 'Edit Product'
+            : mode === 'add'
+            ? 'Add Product'
+            : mode === 'delete'
+            ? 'Delete Product'
+            : ''
+        }
+      />
       {!mode && (
-        <>
+        <div className='flex flex-col items-center sm:flex-row sm:justify-center sm:gap-x-4'>
           <Button
-            styles='w-full'
+            styles='w-40'
             text='Add Product'
             onClick={() => setMode('add')}
           />
           <Button
-            styles='w-full'
+            styles='w-40'
             text='Edit Product'
             onClick={() => setMode('edit')}
           />
           <Button
-            styles='w-full'
+            styles='w-40'
             text='Delete Product'
             onClick={() => setMode('delete')}
           />
-        </>
+        </div>
       )}
 
       {mode === 'add' && <Form type='add' setMode={setMode} />}
