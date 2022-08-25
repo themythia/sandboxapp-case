@@ -3,104 +3,78 @@ import { ProductContext } from '../../../contexts/ProductContext';
 import Button from '../../shared/Button';
 import Input from '../contact/Input';
 import { v4 as uuidv4 } from 'uuid';
+import handleFormData from '../../../utils/handleFormData';
+import api from '../../../utils/api';
 
 const Form = ({ type, setMode }) => {
   const [formData, setFormData] = useState(null);
   const { products, setProducts } = useContext(ProductContext);
+  // select input value
   const [option, setOption] = useState(products[0].id || null);
 
   const handleSubmit = (e, type) => {
     e.preventDefault();
     if (type === 'add') {
-      setFormData({
-        title: e.target[0].value,
-        description: e.target[1].value,
-        category: e.target[2].value,
-        discountPercentage: e.target[3].value,
-        price: e.target[4].value,
-        rating: e.target[5].value,
-        stock: e.target[6].value,
-        thumbnail: 'https://picsum.photos/1024/1024',
-        images: [
-          'https://picsum.photos/1024/1024',
-          'https://picsum.photos/1024/1024',
-        ],
-      });
+      setFormData(handleFormData('add', e.target));
     } else if (type === 'edit') {
-      setFormData({
-        title: e.target[1].value,
-        description: e.target[2].value,
-        category: e.target[3].value,
-        discountPercentage: e.target[4].value,
-        price: e.target[5].value,
-        rating: e.target[6].value,
-        stock: e.target[7].value,
-      });
+      setFormData(handleFormData('edit', e.target));
     } else if (type === 'delete') setFormData(true);
   };
 
   useEffect(() => {
-    if (formData) {
-      if (type === 'add') {
-        fetch('https://dummyjson.com/products/add', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        })
-          .then((res) => res.json())
+    const handleData = (type, data) => {
+      switch (type) {
+        case 'add':
           // api always returns an object with id 101
           // changing id with a unique id to prevent duplicates
           // api doesnt return discountPercentage, using input data instead
-          .then((data) => {
-            setProducts([
-              ...products,
-              {
-                ...data,
-                id: uuidv4(),
-                discountPercentage: formData.discountPercentage,
-              },
-            ]);
-          })
+          return [
+            ...products,
+            {
+              ...data,
+              id: uuidv4(),
+              discountPercentage: formData.discountPercentage,
+            },
+          ];
+
+        case 'edit':
+          return products.map((product) => {
+            if (product.id === option) {
+              if (typeof option === 'number') {
+                return {
+                  ...data,
+                  id: Number(data.id),
+                  discountPercentage: formData.discountPercentage,
+                };
+              } else return { ...product, ...formData };
+            } else return product;
+          });
+
+        case 'delete':
+          return products.filter((product) => product.id !== option);
+
+        default:
+          return products;
+      }
+    };
+
+    if (formData) {
+      if (type === 'add') {
+        api('addProduct', formData)
+          .then((data) => setProducts(handleData('add', data)))
           .catch((e) => console.warn(e));
       } else if (type === 'edit') {
         // to edit newly created products with unique ids
         // dummy fetch product with id 100
-        fetch(
-          `https://dummyjson.com/products/${
-            typeof option === 'number' ? option : 100
-          }`,
-          {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-          }
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            setProducts(
-              products.map((product) => {
-                if (product.id === option) {
-                  if (typeof option === 'number')
-                    return {
-                      ...data,
-                      id: Number(data.id),
-                      discountPercentage: formData.discountPercentage,
-                    };
-                  else if (typeof option === 'string')
-                    return { ...product, ...formData };
-                } else return product;
-              })
-            );
-          })
+        const id = typeof option === 'number' ? option : 100;
+        api('editProduct', formData, id)
+          .then((data) => setProducts(handleData('edit', data)))
           .catch((e) => console.warn(e));
       } else if (type === 'delete') {
-        fetch('https://dummyjson.com/products/1', {
-          method: 'DELETE',
-        })
-          .then((res) => res.json())
-          .then((data) =>
-            setProducts(products.filter((product) => product.id !== option))
-          );
+        const id = typeof option === 'number' ? option : 100;
+        api('deleteProduct', {}, id)
+          .then((data) => setProducts(handleData('delete', data)))
+          .catch((e) => console.warn(e));
       }
       setFormData(null);
       setMode(null);

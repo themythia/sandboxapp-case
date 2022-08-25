@@ -6,6 +6,7 @@ import ImageList from './ImageList';
 import InfoList from './InfoList';
 import Header from './Header';
 import { ProductContext } from '../../../contexts/ProductContext';
+import api from '../../../utils/api';
 const ProductPage = () => {
   const { productId } = useParams();
   const { products } = useContext(ProductContext);
@@ -14,16 +15,20 @@ const ProductPage = () => {
 
   useEffect(() => {
     if (!products) {
-      fetch(`https://dummyjson.com/products/${productId}`)
-        .then((res) => res.json())
+      api('getSingleProduct', {}, productId)
         .then((data) => {
           setProduct(data);
           setThumbnail(data.thumbnail);
         })
         .catch((e) => console.warn(e));
     } else {
+      // productId is a string
+      // product.id can be a integer if fetched from API
+      // product.id can also be a string if newly created due to uuid
+      // eslint-disable-next-line eqeqeq
       setProduct(products.find((product) => productId == product.id));
       setThumbnail(
+        // eslint-disable-next-line eqeqeq
         products.find((product) => productId == product.id).thumbnail
       );
     }

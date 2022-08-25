@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import api from '../utils/api';
 
 export const ProductContext = createContext();
 
@@ -7,8 +8,7 @@ const ProductContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (!products) {
-      fetch('https://dummyjson.com/products')
-        .then((res) => res.json())
+      api('getProducts')
         .then((data) => setProducts(data.products))
         .catch((e) => console.warn(e));
     }
